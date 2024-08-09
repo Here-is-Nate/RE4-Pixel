@@ -35,6 +35,15 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
+    /// Provides two types of movement, one stop when the keys are stop pressed, the other are more
+    /// softly, stoping gradually along the time
+    /// </summary>
+    private enum EMovementType {
+        Hard,
+        Soft
+    }
+
+    /// <summary>
     /// Game Configurations, after, I want to put it in a JSon file
     /// </summary>
     [Header("Configs")]
@@ -51,13 +60,30 @@ public class Player : MonoBehaviour
     // Aim Type
     [SerializeField] private EAimingType _aimType;
 
+    // Movemente Tyoe
+    [SerializeField] private EMovementType _movementType;
+
 
     [Header("Inputs")]
     private Vector2 _movement;
+    // Used to control the player stop, to allow it to stop on diagonal and axis
+    private Vector2 _softMovement;
+    // Used to allow change the movement type in the game, to a soft or hard movement
+    private Vector2 _curMovement;
 
     [Header("Controllers")]
+    [SerializeField] private bool _isWalking;
     [SerializeField] private bool _isRunning;
     [SerializeField] private bool _isAiming;
+
+    #region Properties
+    public Vector2 movement {get {return _movement;}}
+    public Vector2 softMovement {get {return _softMovement;}}
+    public Vector2 curMovement {get {return _curMovement;} set {_curMovement = value;}}
+    public bool isWalking {get {return _isWalking;}}
+    public bool isRunning {get {return _isRunning;}}
+    public bool isAiming {get {return _isAiming;}}
+    #endregion
 
     void Start() {
         rigidBody2D = GetComponent<Rigidbody2D>();
@@ -76,6 +102,7 @@ public class Player : MonoBehaviour
     #region Inputs
     void OnInput() {
         _movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        _softMovement = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         if(Input.GetKeyDown(KeyCode.LeftShift)) _isRunning = !_isRunning;
         if(Input.GetKeyUp(KeyCode.LeftShift) && _runType == ERunType.Hold) _isRunning = false;
@@ -87,28 +114,42 @@ public class Player : MonoBehaviour
 
     #region Movement
     void OnMove() {
-        rigidBody2D.MovePosition(rigidBody2D.position + _movement * _moveSpd * Time.fixedDeltaTime);
+        curMovement = _movementType == EMovementType.Hard ? _movement : _softMovement;
+        rigidBody2D.MovePosition(rigidBody2D.position + curMovement * _moveSpd * Time.fixedDeltaTime);
 
         // Block Move Speed Change if the player is aiming
         if(_isAiming) return;
-
+        
         _moveSpd = _isRunning ? _runSpd : _walkSpd;
+        _isWalking = _isRunning ? false : IsMoving();
     }
 
     void OnRun() {
-        if(_movement.sqrMagnitude <= 0) _isRunning = false;
+        if(_isRunning) _isWalking = false;
+
+        if(!IsMoving()) _isRunning = false;
     }
 
     void OnAim() {
         if(_isAiming) {
             _isRunning = false;
+            _isWalking = false;
 
+            // Set if you can move or not when aiming
             switch(_aimMoveType) {
                 case EMoveAimType.Stop: _moveSpd = 0f; break;
                 case EMoveAimType.Move: _moveSpd = _aimSpd; break;
             }
 
         }
+    }
+    
+    public bool MovementKeyPressed(){
+        return _movement.sqrMagnitude > 0;
+    }
+
+    public bool IsMoving() {
+        return curMovement.sqrMagnitude > 0;
     }
     #endregion
 }
