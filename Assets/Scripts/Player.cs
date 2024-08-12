@@ -117,11 +117,12 @@ public class Player : MonoBehaviour
         curMovement = _movementType == EMovementType.Hard ? _movement : _softMovement;
         rigidBody2D.MovePosition(rigidBody2D.position + curMovement * _moveSpd * Time.fixedDeltaTime);
 
+        _isWalking = _isRunning ? false : IsMoving();
+
         // Block Move Speed Change if the player is aiming
         if(_isAiming) return;
         
         _moveSpd = _isRunning ? _runSpd : _walkSpd;
-        _isWalking = _isRunning ? false : IsMoving();
     }
 
     void OnRun() {
@@ -133,7 +134,6 @@ public class Player : MonoBehaviour
     void OnAim() {
         if(_isAiming) {
             _isRunning = false;
-            _isWalking = false;
 
             // Set if you can move or not when aiming
             switch(_aimMoveType) {
