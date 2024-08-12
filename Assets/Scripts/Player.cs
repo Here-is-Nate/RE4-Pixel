@@ -149,6 +149,8 @@ public class Player : MonoBehaviour
     }
 
     public bool IsMoving() {
+        if(isAiming && _aimMoveType == EMoveAimType.Stop) return false;
+
         return curMovement.sqrMagnitude > 0;
     }
     #endregion
