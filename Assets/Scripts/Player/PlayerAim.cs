@@ -27,6 +27,10 @@ public class PlayerAim : MonoBehaviour
     void OnAiming() {
         _lookAtAngle = GetAimAngle();
     }
+
+    /// <summary>
+    /// Returns a float angle that matches with the direction that mouse is
+    /// </summary>
     public float GetAimAngle() {
         // Get the mouse position in the world
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
