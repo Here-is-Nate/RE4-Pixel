@@ -68,7 +68,9 @@ public class PlayerGFX : MonoBehaviour
     }
 
     void SetActiveAnimatorLayer(int activeIndex) {
-        for(int i = 0; i < animator.layerCount; i++) animator.SetLayerWeight(i, i == activeIndex ? 1f : 0f);
+        for(int i = 0; i < animator.layerCount; i++) {
+            animator.SetLayerWeight(i, i == activeIndex ? 1f : 0f);
+        }
     }
 
     Vector2 SetMovementCoordinateByAim() {
