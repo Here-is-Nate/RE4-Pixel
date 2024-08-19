@@ -55,8 +55,8 @@ public class PlayerGFX : MonoBehaviour
         animator.SetInteger("Transition", GetTransition());
 
         if(player.isAiming) {
-            animator.SetFloat("Horizontal", SetMovementCoordinateByAim().x);
-            animator.SetFloat("Vertical", SetMovementCoordinateByAim().y);
+            animator.SetFloat("Horizontal", GetMovementCoordinateByAim().x);
+            animator.SetFloat("Vertical", GetMovementCoordinateByAim().y);
 
             return;
         }
@@ -73,7 +73,10 @@ public class PlayerGFX : MonoBehaviour
         }
     }
 
-    Vector2 SetMovementCoordinateByAim() {
+    /// <summary>
+    /// Returns a coordinate x,y from player looking at
+    /// </summary>
+    public Vector2 GetMovementCoordinateByAim() {
         float lookingAngle = playerAim.lookAtAngle;
 
         // Set the coordinates to use by a given angle
@@ -93,6 +96,5 @@ public class PlayerGFX : MonoBehaviour
 
         return lookCoordinates[index];
     }
-
     #endregion
 }

@@ -9,6 +9,9 @@ public class Player : MonoBehaviour
     [Header("Components")]
     private Rigidbody2D rigidBody2D;
 
+    [Header("References")]
+    private GunAim gunAim;
+
     // Enumerators
     /// <summary>
     /// Provides two types of run, holding or toggle the run button
@@ -87,6 +90,8 @@ public class Player : MonoBehaviour
 
     void Start() {
         rigidBody2D = GetComponent<Rigidbody2D>();
+
+        gunAim = GetComponentInChildren<GunAim>();
     }
 
     void Update() {
@@ -118,6 +123,8 @@ public class Player : MonoBehaviour
         rigidBody2D.MovePosition(rigidBody2D.position + curMovement * _moveSpd * Time.fixedDeltaTime);
 
         _isWalking = _isRunning ? false : IsMoving();
+
+        if(IsMoving()) gunAim.ResetShake();
 
         // Block Move Speed Change if the player is aiming
         if(_isAiming) return;
