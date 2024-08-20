@@ -124,7 +124,7 @@ public class Player : MonoBehaviour
 
         _isWalking = _isRunning ? false : IsMoving();
 
-        if(IsMoving()) gunAim.ResetShake();
+        if(IsMoving() && gunAim.gameObject.activeInHierarchy) gunAim.ResetShake();
 
         // Block Move Speed Change if the player is aiming
         if(_isAiming) return;
