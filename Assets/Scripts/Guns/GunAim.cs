@@ -20,6 +20,8 @@ public class GunAim : MonoBehaviour
     [SerializeField] private EAimType aimType;
     private float maxShakeValue = 1.8f;
     private float shakeValue;
+    private GameObject _aimedGO;
+    private bool _isAiming;
 
     [Header("Crosshair Config")]
     [SerializeField] private GameObject crossHairRender;
@@ -31,6 +33,11 @@ public class GunAim : MonoBehaviour
     [SerializeField] private GameObject laserPoint;
     private float laserDistance = 10f;
 
+    #region Properties
+    public GameObject aimedGO {get {return _aimedGO;}}
+    public bool isAiming {get {return _isAiming;}}
+    #endregion
+
     void Start() {
         player = GetComponentInParent<Player>();
         playerAim = player.GetComponent<PlayerAim>();
@@ -39,7 +46,9 @@ public class GunAim : MonoBehaviour
     }
 
     void Update() {
-        if(player.isAiming) OnAim();
+        _isAiming = player.isAiming;
+
+        if(isAiming) OnAim();
         else OnNotAim();
 
         StopShake();
@@ -78,6 +87,9 @@ public class GunAim : MonoBehaviour
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(xPosition, yPosition), laserDistance, layerMask);
 
+        if(hit) _aimedGO = hit.transform.gameObject;
+        else _aimedGO = null;
+
         switch(aimType) {
             case EAimType.LASER: LaserAim(hit, xPosition, yPosition); break;
             case EAimType.CROSSHAIR: CrossHairAim(); break;
@@ -85,16 +97,11 @@ public class GunAim : MonoBehaviour
         
     }
 
-    void CrossHairAim() {
-        crossHairRender.SetActive(true);
-
-        float crossDistance;
-        if(shakeValue > 1.2f) crossDistance = 0.3f;
-        else crossDistance = shakeValue / 1.2f * 0.3f;
-
-        DrawCrossHair(Camera.main.ScreenToWorldPoint(Input.mousePosition), crossDistance);
+    public GameObject GetAimedGameObject() {
+        return aimedGO;
     }
 
+    #region Laser Handler
     void LaserAim(RaycastHit2D hit, float xPosition, float yPosition) {
         if(hit) {
             DrawLaser(laserRenderer.transform.position, hit.point);
@@ -109,7 +116,6 @@ public class GunAim : MonoBehaviour
         }
     }
 
-    #region Laser Handler
     void DrawLaser(Vector2 startPos, Vector2 endPos) {
         laserRenderer.SetPosition(0, startPos);
         laserRenderer.SetPosition(1, endPos);
@@ -128,6 +134,16 @@ public class GunAim : MonoBehaviour
     #endregion
 
     #region Crosshair Handler
+    void CrossHairAim() {
+        crossHairRender.SetActive(true);
+
+        float crossDistance;
+        if(shakeValue > 1.2f) crossDistance = 0.3f;
+        else crossDistance = shakeValue / 1.2f * 0.3f;
+
+        DrawCrossHair(Camera.main.ScreenToWorldPoint(Input.mousePosition), crossDistance);
+    }
+
     void DrawCrossHair(Vector2 position, float crossDistance) {
         crossHairRender.transform.position = position;
 

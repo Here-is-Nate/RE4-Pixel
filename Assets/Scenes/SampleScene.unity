@@ -233,7 +233,7 @@ Transform:
   m_GameObject: {fileID: 161191037}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.713, y: 1.68, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.081573844, y: 0.081573844, z: 0.32629538}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -801,7 +801,7 @@ Transform:
   m_GameObject: {fileID: 1107070185}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.876, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -823,9 +823,10 @@ GameObject:
   - component: {fileID: 1174456769}
   - component: {fileID: 1174456768}
   - component: {fileID: 1174456767}
+  - component: {fileID: 1174456770}
   m_Layer: 3
-  m_Name: Box
-  m_TagString: Untagged
+  m_Name: Enemy_PH
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -942,6 +943,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1174456770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1174456766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5abc293607d2d4f4c9628d6ebec60226, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1432940974
 GameObject:
   m_ObjectHideFlags: 0
@@ -1270,6 +1283,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2140691828}
   - component: {fileID: 2140691829}
+  - component: {fileID: 2140691830}
   m_Layer: 0
   m_Name: Gun
   m_TagString: Untagged
@@ -1309,7 +1323,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 8
-  aimType: 1
+  aimType: 0
   crossHairRender: {fileID: 1107070185}
   crossHairCenter: {fileID: 1666797415}
   crossHairSides:
@@ -1318,6 +1332,18 @@ MonoBehaviour:
   - {fileID: 1554104841}
   - {fileID: 329229593}
   laserPoint: {fileID: 161191037}
+--- !u!114 &2140691830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140691827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e853c3b8c36200e4aa239b2373bd16a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
