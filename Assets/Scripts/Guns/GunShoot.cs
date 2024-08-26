@@ -25,7 +25,7 @@ public class GunShoot : MonoBehaviour
         if(hitted == null) return;
 
         if(hitted.CompareTag("Enemy")) {
-            hitted.gameObject.GetComponent<Enemy>().GetDamage();
+            hitted.gameObject.GetComponentInParent<Enemy>().GetDamage();
         }
     }
 }
