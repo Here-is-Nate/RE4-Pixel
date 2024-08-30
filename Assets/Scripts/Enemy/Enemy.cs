@@ -66,7 +66,7 @@ public class Enemy : MonoBehaviour
         _movement = player.transform.position - transform.position;
     }
 
-    public void GetDamage() {
-        Debug.Log("Tomou Dano!");
+    public void GetDamage(float damage) {
+        Debug.Log("Tomou Dano! " + damage);
     }
 }

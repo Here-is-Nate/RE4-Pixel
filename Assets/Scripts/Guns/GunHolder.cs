@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class GunHolder : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public static GunHolder instance;
+
+    private bool _haveGun;
+    public bool haveGun {get {return _haveGun;}}
+
+    void Awake() {
+        instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+        if(transform.childCount > 0) _haveGun = true;
+        else _haveGun = false;
     }
 }

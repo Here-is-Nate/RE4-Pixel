@@ -5,9 +5,15 @@ using UnityEngine;
 public class GunShoot : MonoBehaviour
 {
     [Header("References")]
+    private Gun gun;
     private GunAim gunAim;
 
+    [Header("Shoot Variables")]
+    private bool canShoot;
+    private float canFireCount;
+
     void Start() {
+        gun = GetComponent<Gun>();
         gunAim = GetComponent<GunAim>();
     }
 
@@ -16,16 +22,31 @@ public class GunShoot : MonoBehaviour
     }
 
     void OnShoot() {
-        if(gunAim.isAiming && Input.GetKeyDown(KeyCode.Mouse0)) Shoot();
+        if(gunAim.isAiming && Input.GetKey(KeyCode.Mouse0)) Shoot();
+
+        if(!canShoot) {
+            canFireCount += Time.deltaTime;
+            if(canFireCount >= gun.fireRate) {
+                canShoot = true;
+            }
+        }
     }
 
     void Shoot() {
-        GameObject hitted = gunAim.GetAimedGameObject();
+        if(gun.ammo <= 0) return;
 
-        if(hitted == null) return;
+        if(canShoot) {
+            canFireCount = 0;
+            canShoot = false;
+            gun.ammo--;
 
-        if(hitted.CompareTag("Enemy")) {
-            hitted.gameObject.GetComponentInParent<Enemy>().GetDamage();
+            GameObject hitted = gunAim.GetAimedGameObject();
+
+            if(hitted == null) return;
+
+            if(hitted.CompareTag("Enemy")) {
+                hitted.gameObject.GetComponentInParent<Enemy>().GetDamage(gun.firePower);
+            }
         }
     }
 }

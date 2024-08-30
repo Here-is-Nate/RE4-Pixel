@@ -112,6 +112,8 @@ public class Player : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.LeftShift)) _isRunning = !_isRunning;
         if(Input.GetKeyUp(KeyCode.LeftShift) && _runType == ERunType.Hold) _isRunning = false;
 
+        if(!GunHolder.instance.haveGun) return;
+
         if(Input.GetKeyDown(KeyCode.Mouse1)) _isAiming = !_isAiming;
         if(Input.GetKeyUp(KeyCode.Mouse1) && _aimType == EAimingType.Hold) _isAiming = false;
     }
@@ -124,7 +126,11 @@ public class Player : MonoBehaviour
 
         _isWalking = _isRunning ? false : IsMoving();
 
-        if(IsMoving() && gunAim.gameObject.activeInHierarchy) gunAim.ResetShake();
+        if(IsMoving() && gunAim != null) {
+            if(gunAim.gameObject.activeInHierarchy) {
+                gunAim.ResetShake();
+            }
+        }
 
         // Block Move Speed Change if the player is aiming
         if(_isAiming) return;
@@ -141,6 +147,10 @@ public class Player : MonoBehaviour
     void OnAim() {
         if(_isAiming) {
             _isRunning = false;
+
+            if(GunHolder.instance.haveGun && gunAim == null) {
+                gunAim = GetComponentInChildren<GunAim>();
+            }
 
             // Set if you can move or not when aiming
             switch(_aimMoveType) {
