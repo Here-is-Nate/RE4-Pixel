@@ -15,6 +15,7 @@ public class GunAim : MonoBehaviour
     }
     [SerializeField] private EAimType aimType;
     private float maxShakeValue = 1.8f;
+    private float minShakeValue;
     private float shakeValueLimiter = 1.2f;
     private float shakeValue;
     private GameObject _aimedGO;
@@ -26,6 +27,7 @@ public class GunAim : MonoBehaviour
     [SerializeField] private GameObject[] crossHairSides;
     [SerializeField] private GameObject crossHairHitPoint;
     private float minCrossHairDistance = 0.1f;
+    private float minCrossHairShakeValue = 0f;
 
     [Header("Laser Config")]
     [SerializeField] private GameObject laserPoint;
@@ -36,6 +38,7 @@ public class GunAim : MonoBehaviour
     private float laserShakeDrag = 0.04f;
     private float laserShakeDragCount;
     private float laserShakeInterval = 0.05f;
+    private float minLaserShakeValue = 0.2f;
 
     #region Properties
     public GameObject aimedGO {get {return _aimedGO;}}
@@ -61,7 +64,7 @@ public class GunAim : MonoBehaviour
     void StopShake() {
         if(shakeValue >= 0f) {
             shakeValue -= Time.deltaTime;
-            if(shakeValue < 0f) shakeValue = 0f;
+            if(shakeValue < minShakeValue) shakeValue = minShakeValue;
         }
     }
 
@@ -100,6 +103,12 @@ public class GunAim : MonoBehaviour
 
     #region Laser Handler
     void LaserAim() {
+        // Adjust the order in layer of the laser
+        if(playerAim.GetLookAtIndex() == 4) laserRenderer.sortingOrder = 11;
+        else laserRenderer.sortingOrder = 9;
+
+        if(minShakeValue != minLaserShakeValue) minShakeValue = minLaserShakeValue;
+
         float direction = playerAim.GetAimAngle();
 
         // Convert a degree angle to radians
@@ -164,6 +173,8 @@ public class GunAim : MonoBehaviour
     #region Crosshair Handler
     void CrossHairAim() {
         crossHairRender.SetActive(true);
+
+        if(minShakeValue != minCrossHairShakeValue) minShakeValue = minCrossHairShakeValue;
 
         float crossDistance;
 

@@ -46,5 +46,36 @@ public class PlayerAim : MonoBehaviour
 
         return angle;
     }
+
+    /// <summary>
+    /// Returns a coordinate x,y from player looking at
+    /// </summary>
+    public Vector2 GetLookAtCoordinate() {
+        float lookingAngle = lookAtAngle;
+
+        // Set the coordinates to use by a given angle
+        Vector2[] lookCoordinates = new Vector2[] {
+            new Vector2(0, 1),    // i:0 | A: 0 - 22.5   | 337.5 - 360
+            new Vector2(1, 1),    // i:1 | A: 22.5 - 67.5
+            new Vector2(1, 0),    // i:2 | A: 67.5 - 112.5
+            new Vector2(1, -1),   // i:3 | A: 112.5 - 157.5
+            new Vector2(0, -1),   // i:4 | A: 157.5 - 202.5
+            new Vector2(-1, -1),  // i:5 | A: 202.5 - 247.5
+            new Vector2(-1, 0),   // i:6 | A: 247.5 - 292.5
+            new Vector2(-1, 1)    // i:7 | A: 292.5 - 337.5
+        };
+
+        // Get the current index in the array using the angle
+        int index = Mathf.FloorToInt((lookingAngle + 22.5f) / 45f) % 8;
+
+        return lookCoordinates[index];
+    }
+
+    public float GetLookAtIndex() {
+        float lookingAngle = lookAtAngle;
+
+        // Get the current index in the array using the angle
+        return Mathf.FloorToInt((lookingAngle + 22.5f) / 45f) % 8;
+    }
     
 }

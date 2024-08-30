@@ -55,8 +55,8 @@ public class PlayerGFX : MonoBehaviour
         animator.SetInteger("Transition", GetTransition());
 
         if(player.isAiming) {
-            animator.SetFloat("Horizontal", GetMovementCoordinateByAim().x);
-            animator.SetFloat("Vertical", GetMovementCoordinateByAim().y);
+            animator.SetFloat("Horizontal", playerAim.GetLookAtCoordinate().x);
+            animator.SetFloat("Vertical", playerAim.GetLookAtCoordinate().y);
 
             return;
         }
@@ -71,30 +71,6 @@ public class PlayerGFX : MonoBehaviour
         for(int i = 0; i < animator.layerCount; i++) {
             animator.SetLayerWeight(i, i == activeIndex ? 1f : 0f);
         }
-    }
-
-    /// <summary>
-    /// Returns a coordinate x,y from player looking at
-    /// </summary>
-    public Vector2 GetMovementCoordinateByAim() {
-        float lookingAngle = playerAim.lookAtAngle;
-
-        // Set the coordinates to use by a given angle
-        Vector2[] lookCoordinates = new Vector2[] {
-            new Vector2(0, 1),    // i:0 | A: 0 - 22.5   | 337.5 - 360
-            new Vector2(1, 1),    // i:1 | A: 22.5 - 67.5
-            new Vector2(1, 0),    // i:2 | A: 67.5 - 112.5
-            new Vector2(1, -1),   // i:3 | A: 112.5 - 157.5
-            new Vector2(0, -1),   // i:4 | A: 157.5 - 202.5
-            new Vector2(-1, -1),  // i:5 | A: 202.5 - 247.5
-            new Vector2(-1, 0),   // i:6 | A: 247.5 - 292.5
-            new Vector2(-1, 1)    // i:7 | A: 292.5 - 337.5
-        };
-
-        // Get the current index in the array using the angle
-        int index = Mathf.FloorToInt((lookingAngle + 22.5f) / 45f) % 8;
-
-        return lookCoordinates[index];
     }
     #endregion
 }
