@@ -53,8 +53,8 @@ public class Player : MonoBehaviour
     // Movement Type & Speed
     [SerializeField] private ERunType _runType;
     private float _moveSpd;
-    private float _walkSpd = 2f;
-    private float _runSpd = 4f;
+    private float _walkSpd = 2.3f;
+    private float _runSpd = 4.5f;
 
     // Aim Move Type & Speed
     [SerializeField] private EMoveAimType _aimMoveType;
