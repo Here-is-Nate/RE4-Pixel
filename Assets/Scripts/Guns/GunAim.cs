@@ -6,6 +6,8 @@ public class GunAim : MonoBehaviour
     private Player player;
     private PlayerAim playerAim;
     private LineRenderer laserRenderer;
+    private Animator gunAnimator;
+    private SpriteRenderer gunRenderer;
 
     [Header("Aim Config")]
     [SerializeField] private LayerMask layerMask;
@@ -49,6 +51,9 @@ public class GunAim : MonoBehaviour
         player = GetComponentInParent<Player>();
         playerAim = player.GetComponent<PlayerAim>();
 
+        gunAnimator = GetComponentInChildren<Animator>();
+        gunRenderer = GetComponentInChildren<SpriteRenderer>();
+
         laserRenderer = GetComponentInChildren<LineRenderer>();
     }
 
@@ -81,6 +86,8 @@ public class GunAim : MonoBehaviour
         _aimedGO = null;
 
         Cursor.visible = true;
+
+        gunAnimator.gameObject.SetActive(false);
     }
 
     void OnAim() {
@@ -89,7 +96,15 @@ public class GunAim : MonoBehaviour
         switch(aimType) {
             case EAimType.LASER: LaserAim(); break;
             case EAimType.CROSSHAIR: CrossHairAim(); break;
-        }  
+        }
+
+        gunAnimator.gameObject.SetActive(true);
+
+        gunAnimator.SetFloat("Horizontal", playerAim.GetLookAtCoordinate().x);
+        gunAnimator.SetFloat("Vertical", playerAim.GetLookAtCoordinate().y);
+
+        if(playerAim.GetLookAtIndex() == 4 || playerAim.GetLookAtIndex() == 3 || playerAim.GetLookAtIndex() == 5) gunRenderer.sortingOrder = 12;
+        else gunRenderer.sortingOrder = 9;
     }
 
     public GameObject GetAimedGameObject() {
@@ -105,7 +120,7 @@ public class GunAim : MonoBehaviour
     void LaserAim() {
         // Adjust the order in layer of the laser
         if(playerAim.GetLookAtIndex() == 4) laserRenderer.sortingOrder = 11;
-        else laserRenderer.sortingOrder = 9;
+        else laserRenderer.sortingOrder = 8;
 
         if(minShakeValue != minLaserShakeValue) minShakeValue = minLaserShakeValue;
 

@@ -7,6 +7,7 @@ public class GunShoot : MonoBehaviour
     [Header("References")]
     private Gun gun;
     private GunAim gunAim;
+    private Animator animator;
 
     [Header("Shoot Variables")]
     private bool canShoot;
@@ -15,6 +16,7 @@ public class GunShoot : MonoBehaviour
     void Start() {
         gun = GetComponent<Gun>();
         gunAim = GetComponent<GunAim>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     void Update() {
@@ -39,6 +41,8 @@ public class GunShoot : MonoBehaviour
             canFireCount = 0;
             canShoot = false;
             gun.ammo--;
+
+            animator.SetTrigger("Shoot");
 
             GameObject hitted = gunAim.GetAimedGameObject();
 
