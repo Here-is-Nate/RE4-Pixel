@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GunShoot : MonoBehaviour
@@ -7,6 +5,7 @@ public class GunShoot : MonoBehaviour
     [Header("References")]
     private Gun gun;
     private GunAim gunAim;
+    private GunReload gunReload;
     private Animator animator;
 
     [Header("Shoot Variables")]
@@ -16,6 +15,7 @@ public class GunShoot : MonoBehaviour
     void Start() {
         gun = GetComponent<Gun>();
         gunAim = GetComponent<GunAim>();
+        gunReload = GetComponent<GunReload>();
         animator = GetComponentInChildren<Animator>();
     }
 
@@ -37,12 +37,13 @@ public class GunShoot : MonoBehaviour
     void Shoot() {
         if(gun.ammo <= 0) return;
 
-        if(canShoot) {
+        if(canShoot && !gunReload.reloading) {
             canFireCount = 0;
             canShoot = false;
-            gun.ammo--;
+            gun.DecreaseAmmo();
 
             animator.SetTrigger("Shoot");
+            gun.gunSFX.PlayOneShot(gun.shootingSFX);
 
             GameObject hitted = gunAim.GetAimedGameObject();
 

@@ -16,24 +16,55 @@ public class Gun : MonoBehaviour
     [Header("Ammo")]
     private int curAmmo;
 
+    [Header("SFX")]
+    private AudioSource _gunSFX;
+    private AudioClip _shootingSFX;
+    private AudioClip _reloadingSFX;
+
     #region Properties
     public float firePower {get { return _firePower; } set { _firePower = value; } }
     public float fireRate {get { return _fireRate;} set { _fireRate = value; } }
     public float reloadSpd {get { return _reloadSpd;} set { _reloadSpd = value;}}
     public int capacity {get { return _capacity;} set { _capacity = value; } }
     public int ammo {get {return curAmmo; } set {curAmmo = value;}}
+    public AudioSource gunSFX {get { return _gunSFX;}}
+    public AudioClip shootingSFX {get { return _shootingSFX;} set { _shootingSFX = value;}}
+    public AudioClip reloadingSFX {get { return _reloadingSFX;} set {_reloadingSFX = value;}}
     #endregion
 
-    void Start() {
+    void Awake() {
         SetGunStats();
     }
-
+ 
     void SetGunStats() {
+        _gunSFX = GetComponentInChildren<AudioSource>();
+
         firePower = gunSO.firePower[gunSO.firePowerLevel];
         fireRate = gunSO.fireRate[gunSO.fireRateLevel];
         reloadSpd = gunSO.reloadSpd[gunSO.reloadSpdLevel];
         capacity = gunSO.capacity[gunSO.capacityLevel];
+        shootingSFX = gunSO.shootingSFX;
+        reloadingSFX = gunSO.reloadingSFX;
 
         curAmmo = gunSO.curAmmo;
     }
+
+    #region Ammo Handler
+    public void DecreaseAmmo() {
+        ammo--;
+        // gunSO.curAmmo = ammo;
+    }
+
+    public void DecreaseAmmo(int qtd) {
+        ammo -= qtd;
+    }
+
+    public void IncreaseAmmo() {
+        ammo++;
+    }
+
+    public void IncreaseAmmo(int qtd) {
+        ammo += qtd;
+    }
+    #endregion
 }

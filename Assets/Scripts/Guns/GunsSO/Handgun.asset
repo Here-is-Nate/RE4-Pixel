@@ -25,4 +25,6 @@ MonoBehaviour:
   reloadSpdLevel: 0
   capacityLevel: 0
   curAmmo: 10
+  shootingSFX: {fileID: 8300000, guid: db8bd3f5eae55fa49bac6cf5251e000a, type: 3}
+  reloadingSFX: {fileID: 8300000, guid: 4a8911dd955dc6940a89e72179711770, type: 3}
   gunType: 0

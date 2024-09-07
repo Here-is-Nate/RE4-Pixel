@@ -25,4 +25,8 @@ public class GunSO : ScriptableObject
     [Header("Ammo QTD")]
     public int curAmmo;
 
+    [Header("SFX")]
+    public AudioClip shootingSFX;
+    public AudioClip reloadingSFX;
+
 }
