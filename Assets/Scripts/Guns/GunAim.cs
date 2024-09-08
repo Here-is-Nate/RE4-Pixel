@@ -100,10 +100,13 @@ public class GunAim : MonoBehaviour
 
         gunAnimator.gameObject.SetActive(true);
 
+        // Set The Correct Gun Sprite
         gunAnimator.SetFloat("Horizontal", playerAim.GetLookAtCoordinate().x);
         gunAnimator.SetFloat("Vertical", playerAim.GetLookAtCoordinate().y);
 
-        if(playerAim.GetLookAtIndex() == 4 || playerAim.GetLookAtIndex() == 3 || playerAim.GetLookAtIndex() == 5) gunRenderer.sortingOrder = 12;
+        transform.localRotation = Quaternion.Euler(0f, 0f, playerAim.GetAimTransformAngle());
+
+        if(playerAim.GetLookAtIndex() == 4) gunRenderer.sortingOrder = 12;
         else gunRenderer.sortingOrder = 9;
     }
 

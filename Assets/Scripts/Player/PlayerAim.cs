@@ -35,14 +35,29 @@ public class PlayerAim : MonoBehaviour
         // Get the mouse position in the world
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        // Get the direction of mouse positio
+        // Get the direction of mouse position
         direction = mousePos - transform.position;
 
         // Create a angle using the Tan of x,y, (180/PI) is used to transform radians to degrees
         float angle = Mathf.Atan2(direction.x, direction.y) * (180 / math.PI);
 
-        // Used to not deny angles
+        // Used to not deny negative angles
         if (angle < 0) angle += 360;
+
+        return angle;
+    }
+
+    /// <summary>
+    /// Returns the angle of the aim, even if it's a negative angle
+    /// </summary>
+    public float GetAimTransformAngle() {
+        // Get the mouse position in the world
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        // Get the direction of mouse position
+        direction = mousePos - transform.position;
+
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
         return angle;
     }
