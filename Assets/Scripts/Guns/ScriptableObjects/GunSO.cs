@@ -29,4 +29,6 @@ public class GunSO : ScriptableObject
     public AudioClip shootingSFX;
     public AudioClip reloadingSFX;
 
+    [Header("HUD")]
+    public Sprite wpnHUDSprite;
 }

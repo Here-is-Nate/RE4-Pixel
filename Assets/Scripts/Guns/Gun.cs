@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Gun : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GunSO gunSO;
+
+    [Header("HUD References")]
+    [SerializeField] private Image wpnImage;
+    [SerializeField] private Text wpnAmmoQtd;
 
     [Header("Stats")]
     private float _firePower;
@@ -47,24 +52,36 @@ public class Gun : MonoBehaviour
         reloadingSFX = gunSO.reloadingSFX;
 
         curAmmo = gunSO.curAmmo;
+
+        // HUD
+        wpnImage.sprite = gunSO.wpnHUDSprite;
+        wpnAmmoQtd.text = curAmmo.ToString();
     }
 
     #region Ammo Handler
     public void DecreaseAmmo() {
         ammo--;
+        SetAmmoHUD();
         // gunSO.curAmmo = ammo;
     }
 
     public void DecreaseAmmo(int qtd) {
         ammo -= qtd;
+        SetAmmoHUD();
     }
 
     public void IncreaseAmmo() {
         ammo++;
+        SetAmmoHUD();
     }
 
     public void IncreaseAmmo(int qtd) {
         ammo += qtd;
+        SetAmmoHUD();
+    }
+
+    private void SetAmmoHUD() {
+        wpnAmmoQtd.text = curAmmo.ToString();
     }
     #endregion
 }
