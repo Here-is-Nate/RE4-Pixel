@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyGFX : MonoBehaviour
@@ -8,6 +5,7 @@ public class EnemyGFX : MonoBehaviour
     [Header("References")]
     private Enemy enemy;
     private Animator animator;
+    [SerializeField] private Animator weaponAnimator;
 
     void Start()
     {
@@ -26,6 +24,9 @@ public class EnemyGFX : MonoBehaviour
 
         animator.SetFloat("Horizontal", horizontalMovement);
         animator.SetFloat("Vertical", verticalMovement);
+
+        weaponAnimator.SetFloat("Horizontal", horizontalMovement);
+        weaponAnimator.SetFloat("Vertical", verticalMovement);
 
         animator.SetInteger("Transition", enemy.isMoving ? 1 : 0);
     }

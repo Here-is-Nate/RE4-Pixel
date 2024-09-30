@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private LayerMask playerMask;
 
     [Header("Chasing Config")]
+    [SerializeField] private NavMeshAgent navMeshAgent;
     private bool isChasing;
 
     [Header("Movement Config")]
@@ -27,6 +29,9 @@ public class Enemy : MonoBehaviour
 
     void Start() {
         player = FindObjectOfType<Player>();
+
+        navMeshAgent.updateRotation = false;
+        navMeshAgent.updateUpAxis = false;
     }
 
     void Update() {
@@ -61,7 +66,8 @@ public class Enemy : MonoBehaviour
     }
 
     void ChasePlayer() {
-        transform.position = Vector2.MoveTowards(transform.position, player.transform.position, movementSpd * Time.deltaTime);
+        // transform.position = Vector2.MoveTowards(transform.position, player.transform.position, movementSpd * Time.deltaTime);
+        navMeshAgent.SetDestination(player.transform.position);
 
         _movement = player.transform.position - transform.position;
     }
