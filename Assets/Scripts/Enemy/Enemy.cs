@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class Enemy : MonoBehaviour
 {
     [Header("References")]
     private Player player;
+    private Rigidbody2D rigidBody2D;
 
     [Header("Field of View Config")]
     [SerializeField] private float fieldOfViewRadius;
@@ -14,7 +16,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] private LayerMask playerMask;
 
     [Header("Chasing Config")]
-    [SerializeField] private NavMeshAgent navMeshAgent;
     private bool isChasing;
 
     [Header("Movement Config")]
@@ -29,9 +30,7 @@ public class Enemy : MonoBehaviour
 
     void Start() {
         player = FindObjectOfType<Player>();
-
-        navMeshAgent.updateRotation = false;
-        navMeshAgent.updateUpAxis = false;
+        rigidBody2D = GetComponent<Rigidbody2D>();
     }
 
     void Update() {
@@ -66,10 +65,15 @@ public class Enemy : MonoBehaviour
     }
 
     void ChasePlayer() {
+        // float zCache = transform.position.z;
         // transform.position = Vector2.MoveTowards(transform.position, player.transform.position, movementSpd * Time.deltaTime);
-        navMeshAgent.SetDestination(player.transform.position);
-
+        // transform.position = new Vector3(transform.position.x, transform.position.y, zCache);
         _movement = player.transform.position - transform.position;
+
+        float xMovement = _movement.x != 0f ? _movement.x / Math.Abs(_movement.x) : 0f;
+        float yMovement = _movement.y != 0f ? _movement.y / Math.Abs(_movement.y) : 0f;
+
+        rigidBody2D.MovePosition(rigidBody2D.position + new Vector2(xMovement, yMovement) * movementSpd * Time.fixedDeltaTime);
     }
 
     public void GetDamage(float damage) {
