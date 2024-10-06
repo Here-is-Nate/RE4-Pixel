@@ -5,15 +5,17 @@ public class LayerChange : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collider) {
         if(collider.CompareTag("PlayerFeet")) {
             Transform playerPos = collider.GetComponentInParent<Player>().transform;
+            SpriteRenderer spriteRenderer = playerPos.GetComponentInChildren<SpriteRenderer>();
             
-            playerPos.position = new Vector3(playerPos.position.x, playerPos.position.y, 0f);
+            spriteRenderer.sortingOrder = 9;
             return;
         }
 
         if(collider.CompareTag("EnemyFeet")) {
             Transform enemyPos = collider.GetComponentInParent<Enemy>().transform;
+            SpriteRenderer spriteRenderer = enemyPos.GetComponentInChildren<SpriteRenderer>();
             
-            enemyPos.position = new Vector3(enemyPos.position.x, enemyPos.position.y, 0f);
+            spriteRenderer.sortingOrder = 9;
             return;
         }
     }
@@ -21,15 +23,17 @@ public class LayerChange : MonoBehaviour
     void OnTriggerExit2D(Collider2D collider) {
         if(collider.CompareTag("PlayerFeet")) {
             Transform playerPos = collider.GetComponentInParent<Player>().transform;
+            SpriteRenderer spriteRenderer = playerPos.GetComponentInChildren<SpriteRenderer>();
             
-            playerPos.position = new Vector3(playerPos.position.x, playerPos.position.y, -2f);
+            spriteRenderer.sortingOrder = 11;
             return;
         }
 
         if(collider.CompareTag("EnemyFeet")) {
             Transform enemyPos = collider.GetComponentInParent<Enemy>().transform;
+            SpriteRenderer spriteRenderer = enemyPos.GetComponentInChildren<SpriteRenderer>();
             
-            enemyPos.position = new Vector3(enemyPos.position.x, enemyPos.position.y, -2f);
+            spriteRenderer.sortingOrder = 11;
             return;
         }
     }
