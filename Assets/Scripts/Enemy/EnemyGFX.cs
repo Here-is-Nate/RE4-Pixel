@@ -19,14 +19,13 @@ public class EnemyGFX : MonoBehaviour
     }
 
     void SetAnimatorParameters() {
-        float horizontalMovement = enemy.movement.x;
-        float verticalMovement = enemy.movement.y;
+        Vector2 direction = new Vector2(enemy.GetEvenLookAtCoordinate().x, enemy.GetEvenLookAtCoordinate().y);
 
-        animator.SetFloat("Horizontal", horizontalMovement);
-        animator.SetFloat("Vertical", verticalMovement);
+        animator.SetFloat("Horizontal", direction.x);
+        animator.SetFloat("Vertical", direction.y);
 
-        weaponAnimator.SetFloat("Horizontal", horizontalMovement);
-        weaponAnimator.SetFloat("Vertical", verticalMovement);
+        weaponAnimator.SetFloat("Horizontal", direction.x);
+        weaponAnimator.SetFloat("Vertical", direction.y);
 
         animator.SetInteger("Transition", enemy.isMoving ? 1 : 0);
     }
