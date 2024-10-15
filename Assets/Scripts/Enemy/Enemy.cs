@@ -1,10 +1,19 @@
 using System;
 using UnityEngine;
 using Unity.Mathematics;
-using Unity.Collections;
+using UnityEngine.AI;
+
+public enum EnemyStates {
+    Idle,
+    Chasing,
+    Dead,
+}
 
 public class Enemy : MonoBehaviour
 {
+    [Header("FSM")]
+    private EnemyStates currentState;
+
     [Header("References")]
     private Player player;
     private Rigidbody2D rigidBody2D;
@@ -14,19 +23,24 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float stopChaseFieldRadius;
     [SerializeField] private LayerMask playerMask;
 
-    [Header("Chasing Config")]
-    private bool isChasing;
-    private Vector2 exitDirection;
 
     [Header("Movement Config")]
     [SerializeField] private float movementSpd;
+    private NavMeshAgent navMeshAgent;
     private Vector2 _movement;
     private bool _isMoving;
+
+    /// <summary>
+    /// Used only by LayerChange Script, it controlls if the entity is colliding with a object, that changes
+    /// the behavior when the entity collide with another entity
+    /// </summary>
+    [Header("Layer Status")]
+    private bool _inAObject;
+    public bool inAObject {get {return _inAObject;} set { _inAObject = value; }}
 
     [Header("Looking Settings")]
     private Vector2 _evenLookAtCoordinate;
     private int lookAtIndex;
-    public bool colliding;
 
     #region Properties
     public Vector2 movement {get { return _movement; }}
@@ -37,33 +51,47 @@ public class Enemy : MonoBehaviour
     void Start() {
         player = FindObjectOfType<Player>();
         rigidBody2D = GetComponent<Rigidbody2D>();
+
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        navMeshAgent.updateRotation = false;
+        navMeshAgent.updateUpAxis = false;
     }
 
     void Update() {
-        FieldOfView();
-
-        if(isChasing) ChasePlayer();
-        
-        _isMoving = isChasing;
-    }
-
-    void FieldOfView() {
-        float hitRadius;
-
-        if(!isChasing) hitRadius = fieldOfViewRadius;
-        else hitRadius = stopChaseFieldRadius;
-
-        Collider2D hit = Physics2D.OverlapCircle(transform.position, hitRadius, playerMask);
-
-        if(hit && !isChasing) {
-            isChasing = true;
-            return;
+        switch(currentState) {
+            case EnemyStates.Idle: Idle(); break;
+            case EnemyStates.Chasing: Chasing(); break;
         }
 
-        if(!hit && isChasing) isChasing = false;
-    
+        _isMoving = currentState == EnemyStates.Chasing ? true : false;
     }
 
+    #region Finite State Machines
+    void Idle() {
+        if(FieldOfView(fieldOfViewRadius)) currentState = EnemyStates.Chasing;
+    }
+    void Chasing() {
+        _movement = (player.transform.position - transform.position).normalized;
+        // Move(_movement);
+        navMeshAgent.speed = movementSpd;
+
+        navMeshAgent.SetDestination(player.transform.position);
+
+        if(!FieldOfView(stopChaseFieldRadius)) currentState = EnemyStates.Idle;
+    }
+    #endregion
+
+    #region Action Handlers
+    bool FieldOfView(float hitRadius) {
+        return Physics2D.OverlapCircle(transform.position, hitRadius, playerMask);
+    }
+
+    public void GetDamage(float damage) {
+        Debug.Log("Tomou Dano! " + damage);
+    }
+    #endregion
+
+    #region Coordinate Handler
     /// <summary>
     /// Returns a coordinate x,y from player looking at
     /// </summary>
@@ -108,45 +136,5 @@ public class Enemy : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, stopChaseFieldRadius);
     }
-
-    public void ChasePlayer() {
-        if (!colliding) {
-            _movement = (player.transform.position - transform.position).normalized;
-
-            Move(_movement);
-        } else Move(exitDirection);
-    }
-
-    void Move(Vector2 direction) {
-        rigidBody2D.MovePosition(rigidBody2D.position + direction * movementSpd * Time.fixedDeltaTime);
-    }
-
-    public void GetDamage(float damage) {
-        Debug.Log("Tomou Dano! " + damage);
-    }
-
-    public void Colliding(LayerMask layer, Transform colliderPosition) {
-        if(LayerMask.LayerToName(layer) == "Obstacle") DodgeObstacle(colliderPosition);
-    }
-
-    void DodgeObstacle(Transform obstacle) {
-        GetLookAtCoordinate();
-
-        int complementaryIndex = lookAtIndex + 2;
-
-        if(complementaryIndex > 7) complementaryIndex -= 8;
-
-        Vector2[] lookCoordinates = new Vector2[] {
-            new Vector2(0, 1),    // i:0 | A: 0 - 22.5   | 337.5 - 360
-            new Vector2(1, 1),    // i:1 | A: 22.5 - 67.5
-            new Vector2(1, 0),    // i:2 | A: 67.5 - 112.5
-            new Vector2(1, -1),   // i:3 | A: 112.5 - 157.5
-            new Vector2(0, -1),   // i:4 | A: 157.5 - 202.5
-            new Vector2(-1, -1),  // i:5 | A: 202.5 - 247.5
-            new Vector2(-1, 0),   // i:6 | A: 247.5 - 292.5
-            new Vector2(-1, 1)    // i:7 | A: 292.5 - 337.5
-        };
-
-        exitDirection = lookCoordinates[complementaryIndex];
-    }
+    #endregion
 }

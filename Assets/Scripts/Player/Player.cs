@@ -63,9 +63,16 @@ public class Player : MonoBehaviour
     // Aim Type
     [SerializeField] private EAimingType _aimType;
 
-    // Movemente Tyoe
+    // Movement Type
     [SerializeField] private EMovementType _movementType;
 
+    /// <summary>
+    /// Used only by LayerChange Script, it controlls if the entity is colliding with a object, that changes
+    /// the behavior when the entity collide with another entity
+    /// </summary>
+    [Header("Layer Status")]
+    private bool _inAObject;
+    public bool inAObject {get {return _inAObject;} set { _inAObject = value; }}
 
     [Header("Inputs")]
     private Vector2 _movement;

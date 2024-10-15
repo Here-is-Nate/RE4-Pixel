@@ -7,6 +7,9 @@ TagManager:
   - Enemy
   - PlayerFeet
   - EnemyFeet
+  - PlayerBody
+  - EnemyBody
+  - Obstacle
   layers:
   - Default
   - TransparentFX
